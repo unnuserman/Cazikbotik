@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10101c">
+<title>Neon Arcade — Telegram Mini App</title>
+<style>
+:root{--bg:#10101c;--panel:#19192a;--panel2:#22223a;--text:#f6f5ff;--muted:#aaa9c8;--pink:#ff4fc8;--cyan:#50e3ff;--green:#73f7ad;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#28204b 0,#10101c 55%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+.app{max-width:1050px;margin:auto;padding:18px 16px 40px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,var(--pink),#865bff);box-shadow:0 8px 28px #ff4fc833}
+h1{font-size:21px;margin:0;letter-spacing:.2px}.sub{color:var(--muted);font-size:12px}.wallet{background:#202037;border:1px solid #39395a;border-radius:14px;padding:10px 14px;font-weight:800;color:var(--gold);white-space:nowrap}
+.hero{margin:22px 0 18px;padding:22px;border:1px solid #3a3261;border-radius:22px;background:linear-gradient(120deg,#2d1c4b,#1a2440 70%,#18233a);display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.hero h2{margin:0 0 6px;font-size:clamp(22px,4vw,32px)}.hero p{margin:0;color:#c7c5e5;max-width:520px}.hero .emoji{font-size:58px;filter:drop-shadow(0 6px 16px #ff4fc855)}
+.notice{margin:0 0 20px;color:#c4c2df;font-size:12px;padding:10px 12px;border-radius:12px;background:#171729;border:1px solid #2e2e49}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:20px 0 12px}.section-head h3{margin:0;font-size:18px}.section-head span{color:var(--muted);font-size:12px}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:11px}
+.game{border:1px solid #32324e;background:linear-gradient(160deg,#202039,#171726);border-radius:17px;padding:15px 13px;cursor:pointer;color:var(--text);text-align:left;min-height:124px;transition:.16s}
+.game:hover{transform:translateY(-2px);border-color:#7770b8;background:#272541}.game .icon{font-size:28px;display:block;margin-bottom:10px}.game b{display:block;font-size:14px}.game small{display:block;color:var(--muted);margin-top:3px;font-size:11px}
+.play-area{margin-top:20px;background:var(--panel);border:1px solid #383854;border-radius:22px;padding:20px;min-height:245px}.play-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.play-head h3{margin:0;font-size:20px}.tag{font-size:11px;color:var(--cyan);background:#16313d;padding:5px 9px;border-radius:999px}
+.center{text-align:center;padding:22px 0 8px}.big-result{font-size:clamp(34px,8vw,54px);font-weight:900;letter-spacing:3px;min-height:64px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}.desc{color:var(--muted);font-size:13px;margin:7px 0 17px}
+.controls{display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:11px 16px;background:linear-gradient(135deg,#ff4fc8,#9a65ff);color:white;font-weight:800;cursor:pointer;box-shadow:0 7px 20px #a64cff20}.btn.secondary{background:#30304b;box-shadow:none;border:1px solid #464663}.btn:disabled{opacity:.4;cursor:not-allowed}.field{width:100px;padding:10px;border-radius:10px;border:1px solid #444463;background:#11111e;color:white;font:inherit}
+.status{margin:14px auto 0;max-width:560px;min-height:24px;text-align:center;color:var(--green);font-weight:700}.history{margin-top:16px;color:var(--muted);font-size:12px}.history span{display:inline-block;margin:4px 4px 0 0;padding:5px 8px;background:#25253c;border-radius:8px}
+.footer{text-align:center;color:#777794;font-size:11px;margin:24px 0 0}
+@media(max-width:480px){.app{padding:13px 11px 28px}.hero{padding:18px}.hero .emoji{font-size:42px}.games{grid-template-columns:repeat(2,minmax(0,1fr))}.game{min-height:115px;padding:12px}.play-area{padding:15px}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="top">
+  <div class="brand"><div class="logo">🎮</div><div><h1>NEON ARCADE</h1><div class="sub">Мини-игры • виртуальные монеты</div></div></div>
+  <div class="wallet">🪙 <span id="coins">1000</span></div>
+ </header>
+ <section class="hero"><div><h2>Твоя игровая зона</h2><p>Выбирай режим, делай ставку в виртуальных монетах и проверь удачу. Никаких реальных денег.</p></div><div class="emoji">🕹️</div></section>
+ <p class="notice">🛡️ Только развлекательная игровая валюта. Монеты нельзя купить, вывести или обменять на реальные деньги. Баланс хранится в этом браузере.</p>
+ <div class="section-head"><h3>Выбери игру</h3><span>8 режимов</span></div>
+ <div class="games" id="games">
+  <button class="game" data-game="slots"><span class="icon">🎰</span><b>Неоновые слоты</b><small>Комбинации символов</small></button>
+  <button class="game" data-game="dice"><span class="icon">🎲</span><b>Кости</b><small>Выше или ниже 3.5</small></button>
+  <button class="game" data-game="coin"><span class="icon">🪙</span><b>Орёл / решка</b><small>Угадай сторону</small></button>
+  <button class="game" data-game="roulette"><span class="icon">🎡</span><b>Цветовой круг</b><small>Красное, чёрное или золото</small></button>
+  <button class="game" data-game="basket"><span class="icon">🏀</span><b>Бросок</b><small>Попади в корзину</small></button>
+  <button class="game" data-game="rps"><span class="icon">✂️</span><b>Камень / ножницы</b><small>Классическая дуэль</small></button>
+  <button class="game" data-game="higher"><span class="icon">📈</span><b>Следующая карта</b><small>Выше или ниже</small></button>
+  <button class="game" data-game="cups"><span class="icon">🥤</span><b>Найди шарик</b><small>Выбери один из трёх</small></button>
+ </div>
+ <section class="play-area">
+  <div class="play-head"><h3 id="gameTitle">🎰 Неоновые слоты</h3><span class="tag">Демо-режим</span></div>
+  <div class="center"><div class="big-result" id="result">🍒 ⭐ 🍋</div><div class="desc" id="description">Выставь ставку и крути барабаны.</div><div class="controls" id="controls"></div><div class="status" id="status" aria-live="polite">Стартовый баланс — 1000 монет.</div></div>
+  <div class="history" id="history">Последние результаты: <span>Пока пусто</span></div>
+ </section>
+ <div class="footer">NEON ARCADE • автономный HTML-прототип для Telegram Mini App</div>
+</div>
+<script>
+(() => {
+ const $=id=>document.getElementById(id);
+ const symbols=['🍒','🍋','⭐','💎','7️⃣','🍀'];
+ const names={slots:'🎰 Неоновые слоты',dice:'🎲 Кости',coin:'🪙 Орёл / решка',roulette:'🎡 Цветовой круг',basket:'🏀 Бросок',rps:'✂️ Камень / ножницы',higher:'📈 Следующая карта',cups:'🥤 Найди шарик'};
+ let balance=1000, current='slots', history=[];
+ const coinEl=$('coins'), result=$('result'), desc=$('description'), controls=$('controls'), status=$('status');
+ const rand=n=>Math.floor(Math.random()*n);
+ const fmt=n=>Math.round(n).toLocaleString('ru-RU');
+ function update(){coinEl.textContent=fmt(balance)}
+ function say(text,good=true){status.textContent=text;status.style.color=good?'var(--green)':'#ff8fa5'}
+ function addHistory(text){history.unshift(text);history=history.slice(0,5);$('history').innerHTML='Последние результаты: '+history.map(x=>'<span>'+x+'</span>').join('')}
+ function button(text,fn,secondary=false){let b=document.createElement('button');b.className='btn'+(secondary?' secondary':'');b.textContent=text;b.onclick=fn;controls.appendChild(b);return b}
+ function input(value=50){let i=document.createElement('input');i.className='field';i.type='number';i.min='10';i.max='500';i.step='10';i.value=value;i.setAttribute('aria-label','Ставка в монетах');controls.appendChild(i);return i}
+ function setup(id){current=id;document.querySelectorAll('.game').forEach(b=>b.style.borderColor=b.dataset.game===id?'var(--pink)':'');$('gameTitle').textContent=names[id];controls.innerHTML='';result.textContent='🎮';say('Выбери ставку и начинай!');}
+ function wager(i){let n=Number(i.value);if(!Number.isFinite(n)||n<10||n>500||!Number.isInteger(n)){say('Ставка должна быть от 10 до 500 монет.',false);return null}if(n>balance){say('Недостаточно монет для этой ставки.',false);return null}balance-=n;update();return n}
+ function finish(stake,mult,text){let won=Math.floor(stake*mult);balance+=won;update();say(text+(won?` +${fmt(won)} монет.`:' Ставка не выиграла.'),won>0);addHistory(text+' '+(won?'+'+fmt(won):'−'+fmt(stake)));return won}
+ function wagerControls(play){let i=input();button('Играть',()=>play(i));button('Макс. 500',()=>{i.value=Math.min(500,balance)},true)}
+ function render(id){
+  setup(id);
+  if(id==='slots'){desc.textContent='Три одинаковых символа — x5, две совпавшие — x1.5. Минимальная ставка 10.';result.textContent='🍒 ⭐ 🍋';wagerControls(i=>{let s=wager(i);if(s===null)return;let a=[symbols[rand(6)],symbols[rand(6)],symbols[rand(6)]];result.textContent=a.join(' ');let mult=a[0]===a[1]&&a[1]===a[2]?5:(a[0]===a[1]||a[1]===a[2]||a[0]===a[2]?1.5:0);finish(s,mult,mult===5?'ДЖЕКПОТ!':mult?'Есть совпадение!':'Не в этот раз.');});}
+  if(id==='dice'){desc.textContent='Выбери прогноз. Верный прогноз приносит x1.9 от ставки.';result.textContent='🎲 ?';wagerControls(i=>{let s=wager(i);if(s===null)return;let n=1+rand(6);result.textContent='🎲 '+n;let pick=document.getElementById('dicepick')?.value||'high';let win=pick==='high'?n>=4:n<=3;finish(s,win?1.9:0,win?'Верный прогноз!':'Прогноз не совпал.');});let sel=document.createElement('select');sel.id='dicepick';sel.className='field';sel.innerHTML='<option value="high">4–6</option><option value="low">1–3</option>';controls.insertBefore(sel,controls.firstChild);}
+  if(id==='coin'){desc.textContent='Угадай сторону монеты. Верный ответ — x1.9.';result.textContent='🪙';wagerControls(i=>{let s=wager(i);if(s===null)return;let side=rand(2)?'Орёл':'Решка',pick=document.getElementById('coinpick').value;result.textContent=side==='Орёл'?'🦅 Орёл':'🌙 Решка';finish(s,pick===side?1.9:0,pick===side?'Угадал!':'Не угадал.');});let sel=document.createElement('select');sel.id='coinpick';sel.className='field';sel.innerHTML='<option>Орёл</option><option>Решка</option>';controls.insertBefore(sel,controls.firstChild);}
+  if(id==='roulette'){desc.textContent='Выбери цвет. Красный — x1.9, чёрный — x1.9, золото — x5.';result.textContent='🎡';let i=input();let sel=document.createElement('select');sel.id='colorpick';sel.className='field';sel.innerHTML='<option value="Красное">🔴 Красное</option><option value="Чёрное">⚫ Чёрное</option><option value="Золото">🟡 Золото</option>';controls.appendChild(sel);controls.insertBefore(i,controls.firstChild);button('Крутить',()=>{let s=wager(i);if(s===null)return;let r=rand(20),color=r===0?'Золото':r%2?'Красное':'Чёрное';result.textContent=color==='Золото'?'🟡':color==='Красное'?'🔴':'⚫';let win=sel.value===color;finish(s,win?(color==='Золото'?5:1.9):0,win?'Цвет совпал!':'Цвет не совпал.');});}
+  if(id==='basket'){desc.textContent='Попади в корзину! Успех — x1.8, промах — ставка проиграна.';result.textContent='🏀';wagerControls(i=>{let s=wager(i);if(s===null)return;let hit=Math.random()<.52;result.textContent=hit?'🏀 🥅':'🏀 💨';finish(s,hit?1.8:0,hit?'Точный бросок!':'Мимо!');});}
+  if(id==='rps'){desc.textContent='Победа — x1.9, ничья возвращает ставку, проигрыш — ставка проиграна.';result.textContent='✊ ✌️ ✋';let i=input();controls.appendChild(i);['Камень','Ножницы','Бумага'].forEach((pick)=>button(pick,()=>{let s=wager(i);if(s===null)return;let opts=['Камень','Ножницы','Бумага'],cpu=opts[rand(3)];result.textContent=({Камень:'✊',Ножницы:'✌️',Бумага:'✋'})[pick]+' vs '+({Камень:'✊',Ножницы:'✌️',Бумага:'✋'})[cpu];let win=pick==='Камень'&&cpu==='Ножницы'||pick==='Ножницы'&&cpu==='Бумага'||pick==='Бумага'&&cpu==='Камень';let draw=pick===cpu;finish(s,win?1.9:draw?1:0,win?'Ты победил!':draw?'Ничья!':'Компьютер победил.');},true));}
+  if(id==='higher'){desc.textContent='Предскажи, будет ли следующая карта выше или ниже. Верный прогноз — x1.8.';result.textContent='🂠';let i=input();controls.appendChild(i);let sel=document.createElement('select');sel.id='cardpick';sel.className='field';sel.innerHTML='<option value="up">Выше</option><option value="down">Ниже</option>';controls.appendChild(sel);button('Открыть карты',()=>{let s=wager(i);if(s===null)return;let a=1+rand(13),b=1+rand(13);result.textContent=`${card(a)} → ${card(b)}`;let win=sel.value==='up'?b>a:b<a;finish(s,win?1.8:0,a===b?'Равные карты — без выигрыша.':win?'Верно! Карта подходит.':'Не угадал.');});}
+  if(id==='cups'){desc.textContent='Под каким стаканчиком шарик? Выбери 1, 2 или 3. Успех — x2.5.';result.textContent='🥤 🥤 🥤';let i=input();controls.appendChild(i);[1,2,3].forEach(n=>button('Стакан '+n,()=>{let s=wager(i);if(s===null)return;let target=1+rand(3);result.textContent=[1,2,3].map(x=>x===target?(x===n?'🔵':'🥤'):'🥤').join(' ');finish(s,n===target?2.5:0,n===target?'Нашёл шарик!':'Шарик был под стаканом '+target+'.');},true));}
+ }
+ function card(n){return ['','A','2','3','4','5','6','7','8','9','10','J','Q','K'][n]}
+ document.querySelectorAll('.game').forEach(b=>b.addEventListener('click',()=>render(b.dataset.game)));
+ // Default game
+ render('slots');
+ // Optional Telegram WebApp integration; still works as a regular HTML page.
+ if(window.Telegram?.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}
+})();
+</script>
+</body>
+</html>
